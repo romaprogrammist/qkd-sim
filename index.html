@@ -1,0 +1,322 @@
+<!-- 
+    QKD Simulator: Interactive BB84 Protocol Visualization
+    Copyright (C) 2025  Maksimov Roman Viktorovich
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QKD Симулятор: 100 идей для Беларуси (NEO)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Fira+Code:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e7eb;
+        }
+
+        .font-mono-fira { font-family: 'Fira Code', monospace; }
+
+        .text-neo-cyan { color: #00bcd4; }
+        .text-neo-green { color: #34d399; }
+        .bg-neo-cyan { background-color: #00bcd4; }
+        .bg-dark-card { background-color: #1a1a1a; }
+        .border-neo-cyan { border-color: #00bcd4; }
+        .border-neo-green { border-color: #34d399; }
+
+        .hover-lift {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
+        }
+
+        .glow-button {
+            box-shadow: 0 0 5px rgba(0, 188, 212, 0.6);
+            transition: all 0.3s ease-in-out;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
+            transform: scale(1.02);
+        }
+
+        .console-bg {
+            background-color: #050505;
+            border: 1px solid #1f2937;
+        }
+
+        .qubit-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #00bcd4;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="bg-gray-900 shadow-xl shadow-cyan-500/10 sticky top-0 z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-neo-cyan">Проект QKD | 100 идей для Беларуси</h1>
+            <div class="text-xs text-gray-500 font-mono hidden sm:block uppercase tracking-widest">
+                Simulator Engine v2.6 (Statistical Edition)
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+        
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Интерактивный симулятор BB84</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                Визуализация процесса квантового распределения ключей. Основано на физических принципах неопределенности.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2 bg-dark-card p-8 rounded-2xl border-t-4 border-neo-cyan hover-lift">
+                <h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-white">
+                    <svg class="w-5 h-5 text-neo-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                    Настройки симуляции
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="space-y-4">
+                        <label class="text-xs text-gray-500 uppercase font-bold tracking-wider">Длина последовательности</label>
+                        <input type="range" id="qubitCount" min="8" max="64" value="24" 
+                               class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[#00bcd4]">
+                        <div class="flex justify-between font-mono-fira text-neo-cyan text-sm">
+                            <span>8 bits</span>
+                            <span id="qubitValDisplay" class="font-bold text-lg">24</span>
+                            <span>64 bits</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center">
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-3">Состояние канала</span>
+                        <div class="flex items-center cursor-pointer" onclick="document.getElementById('eveEnabled').click()">
+                            <input type="checkbox" id="eveEnabled" class="hidden toggle-checkbox">
+                            <div class="w-14 h-7 bg-gray-800 rounded-full relative transition-colors toggle-label border border-gray-700">
+                                <div id="toggle-circle" class="absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform"></div>
+                            </div>
+                            <span class="ml-4 font-bold text-sm" id="eveStatusText">КАНАЛ БЕЗОПАСЕН</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-gray-800 flex justify-end">
+                    <button onclick="runSimulation()" class="glow-button bg-neo-cyan text-white font-bold py-3 px-10 rounded-xl transition-all uppercase tracking-widest text-sm">
+                        Запустить протокол
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-dark-card p-8 rounded-2xl border-t-4 border-neo-green hover-lift">
+                <h3 class="text-lg font-bold mb-6 text-white">Режим вывода</h3>
+                <div class="flex flex-col gap-3">
+                    <button id="btnGraph" onclick="setView('graph')" class="w-full py-4 rounded-xl bg-neo-cyan text-white font-bold transition-all shadow-lg">
+                        Графический интерфейс
+                    </button>
+                    <button id="btnConsole" onclick="setView('console')" class="w-full py-4 rounded-xl bg-gray-800 text-gray-400 hover:text-white transition-all font-mono-fira">
+                        Терминал (Console)
+                    </button>
+                </div>
+                <p class="mt-6 text-xs text-gray-500 leading-relaxed italic">
+                    Для более точного QBER при атаке рекомендуется выбирать длину более 30 кубитов.
+                </p>
+            </div>
+        </div>
+
+        <div id="mainDisplay" class="hidden space-y-12 animate-fadeIn pb-20">
+            <div id="viewGraph" class="space-y-12">
+                <div class="bg-dark-card p-6 rounded-2xl border-l-4 border-neo-cyan">
+                    <h2 class="text-sm font-bold text-neo-cyan uppercase tracking-widest mb-4">Alice: Передача состояний</h2>
+                    <div id="aliceRow" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div id="eveSection" class="bg-dark-card p-6 rounded-2xl border-l-4 border-red-500 hidden">
+                    <h2 class="text-sm font-bold text-red-500 uppercase tracking-widest mb-4">Eve: Перехват и измерение</h2>
+                    <div id="eveRow" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div class="bg-dark-card p-6 rounded-2xl border-l-4 border-neo-green">
+                    <h2 class="text-sm font-bold text-neo-green uppercase tracking-widest mb-4">Bob: Прием и измерение</h2>
+                    <div id="bobRow" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <div id="viewConsole" class="hidden">
+                <div class="console-bg rounded-2xl p-8 font-mono-fira text-sm leading-relaxed overflow-x-auto min-h-[500px] shadow-2xl border border-gray-800">
+                    <div id="consoleOutput" class="text-gray-400 whitespace-pre"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="placeholder" class="py-32 text-center">
+            <div class="inline-block p-10 bg-dark-card rounded-3xl border border-gray-800 shadow-2xl">
+                <svg class="w-20 h-20 mx-auto text-gray-700 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <div class="text-2xl text-gray-500 font-bold uppercase tracking-widest">Система готова</div>
+                <p class="text-gray-600 mt-2">Инициализируйте квантовый канал связи</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-white py-10 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm font-semibold mb-2 text-neo-cyan uppercase tracking-widest">Республиканский молодежный проект «100 идей для Беларуси»</p>
+            <p class="text-xs text-gray-500">&copy; 2025. Разработано Максимовым Романом Викторовичем</p>
+        </div>
+    </footer>
+
+    <script>
+        const SYMBOLS = { 0: { 0: '↑', 1: '→' }, 1: { 0: '↗', 1: '↖' } };
+        let currentView = 'graph';
+
+        document.getElementById('qubitCount').addEventListener('input', (e) => {
+            document.getElementById('qubitValDisplay').innerText = e.target.value;
+        });
+
+        document.getElementById('eveEnabled').addEventListener('change', (e) => {
+            const circle = document.getElementById('toggle-circle');
+            const text = document.getElementById('eveStatusText');
+            circle.style.transform = e.target.checked ? 'translateX(28px)' : 'translateX(0px)';
+            text.innerText = e.target.checked ? 'ВНИМАНИЕ: ЕВА В КАНАЛЕ' : 'КАНАЛ БЕЗОПАСЕН';
+            text.className = e.target.checked ? 'ml-4 font-bold text-sm text-red-500' : 'ml-4 font-bold text-sm text-neo-green';
+        });
+
+        function setView(view) {
+            currentView = view;
+            document.getElementById('viewGraph').classList.toggle('hidden', view !== 'graph');
+            document.getElementById('viewConsole').classList.toggle('hidden', view !== 'console');
+            
+            const gBtn = document.getElementById('btnGraph');
+            const cBtn = document.getElementById('btnConsole');
+            
+            if(view === 'graph') {
+                gBtn.className = "w-full py-4 rounded-xl bg-neo-cyan text-white font-bold transition-all shadow-lg";
+                cBtn.className = "w-full py-4 rounded-xl bg-gray-800 text-gray-400 hover:text-white transition-all font-mono-fira";
+            } else {
+                cBtn.className = "w-full py-4 rounded-xl bg-neo-cyan text-white font-bold transition-all shadow-lg";
+                gBtn.className = "w-full py-4 rounded-xl bg-gray-800 text-gray-400 hover:text-white transition-all font-mono-fira";
+            }
+        }
+
+        function runSimulation() {
+            const num = parseInt(document.getElementById('qubitCount').value);
+            const hasEve = document.getElementById('eveEnabled').checked;
+            
+            document.getElementById('placeholder').classList.add('hidden');
+            document.getElementById('mainDisplay').classList.remove('hidden');
+
+            const aBits = Array.from({length: num}, () => Math.round(Math.random()));
+            const aBases = Array.from({length: num}, () => Math.round(Math.random()));
+
+            let eBases = null; let eBits = null;
+            if(hasEve) {
+                eBases = Array.from({length: num}, () => Math.round(Math.random()));
+                eBits = eBases.map((b, i) => b === aBases[i] ? aBits[i] : Math.round(Math.random()));
+            }
+
+            const bBases = Array.from({length: num}, () => Math.round(Math.random()));
+            const bBits = bBases.map((b, i) => {
+                const sourceBase = hasEve ? eBases[i] : aBases[i];
+                const sourceBit = hasEve ? eBits[i] : aBits[i];
+                return b === sourceBase ? sourceBit : Math.round(Math.random());
+            });
+
+            const matchingIndices = [];
+            aBases.forEach((base, i) => { if (base === bBases[i]) matchingIndices.push(i); });
+
+            const sAliceKey = matchingIndices.map(i => aBits[i]);
+            const sBobKey = matchingIndices.map(i => bBits[i]);
+
+            let errCount = 0;
+            sAliceKey.forEach((bit, i) => { if (bit !== sBobKey[i]) errCount++; });
+            const qber = sAliceKey.length > 0 ? (errCount / sAliceKey.length) : 0;
+
+            renderGraph(aBits, aBases, eBits, eBases, bBits, bBases);
+            renderPythonOutput(num, hasEve, aBits, aBases, eBases, bBits, bBases, matchingIndices, sAliceKey, sBobKey, qber);
+        }
+
+        function renderGraph(aBits, aBases, eBits, eBases, bBits, bBases) {
+            const render = (id, bits, bases, textColor) => {
+                const row = document.getElementById(id); row.innerHTML = '';
+                if(!bits) return;
+                bits.forEach((b, i) => {
+                    row.innerHTML += `
+                    <div class="qubit-card w-11 h-16 rounded-xl flex flex-col items-center justify-center border border-gray-800">
+                        <span class="text-[7px] text-gray-600 font-mono mb-1">#${i}</span>
+                        <span class="text-xl ${textColor}">${SYMBOLS[bases[i]][b]}</span>
+                        <span class="text-[8px] text-gray-500 mt-1 uppercase">${bases[i] ? 'Diag' : 'Rect'}</span>
+                    </div>`;
+                });
+            };
+            render('aliceRow', aBits, aBases, 'text-neo-cyan');
+            render('eveRow', eBits, eBases, 'text-red-500');
+            render('bobRow', bBits, bBases, 'text-neo-green');
+            document.getElementById('eveSection').classList.toggle('hidden', !eBits);
+        }
+
+        function renderPythonOutput(num, hasEve, aBits, aBases, eBases, bBits, bBases, indices, aKey, bKey, qber) {
+            const console = document.getElementById('consoleOutput');
+            let log = `<span class="text-white font-bold">=== СЦЕНАРИЙ: Квантовый канал ${hasEve ? 'С ЕВОЙ' : 'БЕЗ ЕВЫ'} ===</span>\n`;
+            log += `--- Симуляция BB84 для ${num} кубитов (Ева: ${hasEve ? 'Да' : 'Нет'}) ---\n`;
+            log += `Алиса отправила биты:  [${aBits.join(' ')}]\n`;
+            log += `Базисы Алисы:          [${aBases.join(' ')}]\n`;
+            
+            if(hasEve) {
+                log += `<span class="text-red-400">Ева перехватила и измерила, базисы Евы: [${eBases.join(' ')}]</span>\n`;
+            }
+            
+            log += `Боб измерил биты:      [${bBits.join(' ')}]\n`;
+            log += `Базисы Боба:           [${bBases.join(' ')}]\n\n`;
+            
+            log += `--- После сравнения базисов ---\n`;
+            log += `Совпавшие индексы:     [${indices.join(', ')}]\n`;
+            log += `Отобранный ключ Алисы: [${aKey.join(' ')}]\n`;
+            log += `Отобранный ключ Боба:  [${bKey.join(' ')}]\n`;
+            log += `Частота ошибок (QBER): <span class="${qber > 0.05 ? 'text-red-500' : 'text-neo-green'}">${qber.toFixed(2)}</span>\n\n`;
+
+            if(qber > 0.05) {
+                log += `<span class="text-red-600 font-bold bg-red-900/20 px-2 py-1">!!! ОБНАРУЖЕНА ЕВА! Попытка взлома. Ключ не будет использован. !!!</span>\n`;
+            } else if (hasEve && qber <= 0.05) {
+                log += `<span class="text-yellow-500 font-bold bg-yellow-900/20 px-2 py-1">УВЕДОМЛЕНИЕ: Ева активна, но QBER низкий (${qber.toFixed(2)}).
+Это статистическая флуктуация, возможная на малых выборках. 
+В реальных системах используются тысячи кубитов для исключения таких случаев.</span>\n`;
+            } else {
+                log += `<span class="text-neo-green font-bold bg-green-900/20 px-2 py-1">Квантовый канал чист. Ключ может быть использован.</span>\n`;
+            }
+
+            log += `\n<span class="text-neo-cyan font-bold border-t border-gray-800 pt-4 block mt-4">--- Аналитическое примечание (System Log) ---</span>\n`;
+            log += `<span class="text-gray-400 italic">Наблюдаемое отсутствие ошибок (QBER=0) при наличии перехвата объясняется статистическим совпадением базисов измерения Евы на малой выборке данных. 
+Согласно закону больших чисел, вероятность скрытого перехвата экспоненциально стремится к нулю с ростом длины квантового ключа.</span>\n`;
+            
+            console.innerHTML = log;
+        }
+    </script>
+</body>
+</html>
