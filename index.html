@@ -75,6 +75,12 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -88,8 +94,26 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
         
+        <!-- КРАСНОЕ ПРИМЕЧАНИЕ О ТЕХНОЛОГИЯХ -->
+        <div class="mb-8 bg-red-900/20 border border-red-500/50 rounded-2xl p-4 sm:p-6 flex items-start gap-4 animate-fadeIn">
+            <div class="bg-red-500 p-2 rounded-lg shrink-0">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-red-400 font-bold uppercase tracking-wider text-sm mb-1">Важное техническое примечание</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Данный веб-интерфейс является <span class="text-white font-semibold">упрощенной JavaScript-демонстрацией</span> для визуализации логики протокола. 
+                    Оригинальный научно-исследовательский симулятор разработан на <span class="text-white font-semibold">Python</span> с использованием библиотек 
+                    <span class="text-neo-cyan font-mono">Qiskit</span> и <span class="text-neo-cyan font-mono">NumPy</span>, что позволяет проводить полноценное 
+                    квантовое моделирование на уровне векторов состояний. Основной упор научной работы сделан именно на высокоточный Python-движок.
+                </p>
+            </div>
+        </div>
+
         <div class="text-center mb-12">
             <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Интерактивный симулятор BB84</h2>
             <p class="text-gray-400 max-w-2xl mx-auto">
