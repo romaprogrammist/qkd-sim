@@ -5,7 +5,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -81,6 +81,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+
+        /* Фикс для предотвращения выхода терминала за экран на мобильных */
+        #consoleOutput {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap; /* Позволяет тексту переноситься, сохраняя пробелы и переносы строк */
+            word-break: break-all;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -94,7 +102,7 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full overflow-x-hidden">
         
         <!-- КРАСНОЕ ПРИМЕЧАНИЕ О ТЕХНОЛОГИЯХ -->
         <div class="mb-8 bg-red-900/20 border border-red-500/50 rounded-2xl p-4 sm:p-6 flex items-start gap-4 animate-fadeIn">
@@ -175,7 +183,7 @@
             </div>
         </div>
 
-        <div id="mainDisplay" class="hidden space-y-12 animate-fadeIn pb-20">
+        <div id="mainDisplay" class="hidden space-y-12 animate-fadeIn pb-20 w-full">
             <div id="viewGraph" class="space-y-12">
                 <div class="bg-dark-card p-6 rounded-2xl border-l-4 border-neo-cyan">
                     <h2 class="text-sm font-bold text-neo-cyan uppercase tracking-widest mb-4">Alice: Передача состояний</h2>
@@ -193,9 +201,9 @@
                 </div>
             </div>
 
-            <div id="viewConsole" class="hidden">
-                <div class="console-bg rounded-2xl p-8 font-mono-fira text-sm leading-relaxed overflow-x-auto min-h-[500px] shadow-2xl border border-gray-800">
-                    <div id="consoleOutput" class="text-gray-400 whitespace-pre"></div>
+            <div id="viewConsole" class="hidden w-full">
+                <div class="console-bg rounded-2xl p-4 sm:p-8 font-mono-fira text-xs sm:text-sm leading-relaxed min-h-[500px] shadow-2xl border border-gray-800 overflow-x-hidden">
+                    <div id="consoleOutput" class="text-gray-400 whitespace-pre-wrap"></div>
                 </div>
             </div>
         </div>
@@ -320,7 +328,7 @@
             log += `Базисы Боба:           [${bBases.join(' ')}]\n\n`;
             
             log += `--- После сравнения базисов ---\n`;
-            log += `Совпавшие индексы:     [${indices.join(', ')}]\n`;
+            log += `Совпавшие индексы:      [${indices.join(', ')}]\n`;
             log += `Отобранный ключ Алисы: [${aKey.join(' ')}]\n`;
             log += `Отобранный ключ Боба:  [${bKey.join(' ')}]\n`;
             log += `Частота ошибок (QBER): <span class="${qber > 0.05 ? 'text-red-500' : 'text-neo-green'}">${qber.toFixed(2)}</span>\n\n`;
